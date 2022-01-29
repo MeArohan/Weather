@@ -1,45 +1,43 @@
-import tkinter as tk 
-import requests 
-import time 
+import tkinter as tk
+import requests
+import time
+ 
 
-def getWeather(display): 
-    city = textfield.get() 
+def getWeather(canvas):
+    city = textField.get()
+    api = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=06c921750b9a82d8f5d1294e1586276f"
     
-    api = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=f2d2d1da76696f63a6fbf47c176880f2" 
-    json_data = requests.get(api).json() 
+    json_data = requests.get(api).json()
     condition = json_data['weather'][0]['main']
-    temp = int(json_data['main']['temp'] - 273.15) 
-    min_temp = int(json_data['main']['temp_min'] - 273.15)  
-    max_temp = int(json_data['main']['temp_max'] - 273.15) 
+    temp = int(json_data['main']['temp'] - 273.15)
+    min_temp = int(json_data['main']['temp_min'] - 273.15)
+    max_temp = int(json_data['main']['temp_max'] - 273.15)
     pressure = json_data['main']['pressure']
-    humidity = json_data['main']['humidity'] 
-    wind = json_data['wind']['speed']   
+    humidity = json_data['main']['humidity']
+    wind = json_data['wind']['speed']
+    sunrise = time.strftime('%I:%M:%S', time.gmtime(json_data['sys']['sunrise'] - 21600))
+    sunset = time.strftime('%I:%M:%S', time.gmtime(json_data['sys']['sunset'] - 21600))
 
-    final_info = condition + "\n" +str(temp) + "C" 
-    final_data = "\n" + "Max Temperature: " + str(max_temp) + "\n" + "Minimum Temperature: " + str(min_temp) + "\n" + "Pressure: " + str(pressure) + "\n" + "Humidity: " + str(humidity) + "\n" + "Wind Speed: " + str(wind) 
-    text1.config(text = final_info) 
-    text2.config(text = final_data) 
-
-
-
-display = tk.Tk() 
-display.geometry("700x700")
-display.title("Weather")
-
-f = ("Helvetica", 16, "bold italic") 
-t = ("Helvetica", 36, "bold")
-
-textfield = tk.Entry(display, font = t)  
-textfield.pack(pady = 20) 
-textfield.focus()  
-textfield.bind('<Return>', getWeather) 
-
-text1 = tk.Label(display, font = t)
-text1.pack() 
-text2 = tk.Label(display, font = f)  
-text1.pack() 
-
-display.mainloop()  
+    final_info = condition + "\n" + str(temp) + "°C" 
+    final_data = "\n"+ "Min Temp: " + str(min_temp) + "°C" + "\n" + "Max Temp: " + str(max_temp) + "°C" +"\n" + "Pressure: " + str(pressure) + "\n" +"Humidity: " + str(humidity) + "\n" +"Wind Speed: " + str(wind) + "\n" + "Sunrise: " + sunrise + "\n" + "Sunset: " + sunset
+    label1.config(text = final_info)
+    label2.config(text = final_data)
 
 
+canvas = tk.Tk()
+canvas.geometry("600x500")
+canvas.title("Weather App")
+f = ("poppins", 15, "bold")
+t = ("poppins", 35, "bold")
+
+textField = tk.Entry(canvas, justify='center', width = 20, font = t)
+textField.pack(pady = 20)
+textField.focus()
+textField.bind('<Return>', getWeather)
+
+label1 = tk.Label(canvas, font=t)
+label1.pack()
+label2 = tk.Label(canvas, font=f)
+label2.pack()
+canvas.mainloop()
 
